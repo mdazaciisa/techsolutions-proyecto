@@ -57,13 +57,16 @@ class ProyectoController extends Controller
 
     public function agregarProyecto(Request $request)
     {
-        $proyecto = new Proyecto();
-        $proyecto->id = $request->input('id');
-        $proyecto->nombre = $request->input('nombre');
-        $proyecto->fechaini = $request->input('fechaini');
-        $proyecto->estado = $request->input('estado');
-        $proyecto->responsable = $request->input('responsable');
-        $proyecto->monto = $request->input('monto');
+        $datosValidados = $request->validate([
+            'nombre' => 'required|string',
+            'fechaini' => 'required|date',
+            'estado' => 'required|string',
+            'responsable' => 'required|string',
+            'monto' => 'required|numeric',
+        ]);
+
+        $datosValidados['created_by'] = auth()->id();
+        $proyecto = Proyecto::create($datosValidados);
 
         return view('proyecto-creado', compact('proyecto'));
     }
