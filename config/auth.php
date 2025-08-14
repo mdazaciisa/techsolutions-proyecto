@@ -1,5 +1,7 @@
 <?php
 
+//use Illuminate\Support\Facades\App;
+
 return [
 
     /*
@@ -13,8 +15,12 @@ return [
     |
     */
 
-    'defaults' => [
+    /* 'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    ], */
+    'defaults' => [
+        'guard' => 'api',
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -40,6 +46,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'usuario',
+    ],
     ],
 
     /*
@@ -62,7 +72,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\Usuario::class,
+        ],
+        'usuario' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Usuario::class,
         ],
 
         // 'users' => [

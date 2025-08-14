@@ -70,24 +70,20 @@ class ProyectoController extends Controller
 
     public function eliminar($id)
     {
-        $modelo = new Proyecto();
-        $proyectos = $modelo->obtenerProyectos($id);
+        $proyecto = Proyecto::find($id);
 
-        $proyectoEncontrado = null;
-        foreach ($proyectos as $p) {
-            if ($p['id'] == $id) {
-                $proyectoEncontrado = $p;
-                break;
-            }
-        }
+        // Si no existe el proyecto
+        if (!$proyecto) {
+        return view('error', ['mensaje' => "Error al eliminar. Proyecto con id $id no existe."]);
+     }
 
-        //si id no existe
-        if ($proyectoEncontrado == null) {
-            return view('error', ['mensaje' => "Error al eliminar. Proyecto con id $id no existe."]);
-        }
+        // Eliminar el proyecto
+        $proyecto->delete();
 
+        // Mostrar vista personalizada
         return view('eliminar', ['id' => $id, 'mensaje' => "Proyecto con id $id eliminado exitosamente."]);
     }
+
 
     //Método para mostrar formulario
     public function editar($id)
@@ -111,16 +107,24 @@ class ProyectoController extends Controller
     public function actualizar(Request $request, $id)
     {
         $datosValidados = $request->validate([
-            'nombre' => 'required|string',
-            'fechaini' => 'required|date',
-            'estado' => 'required|string',
-            'responsable' => 'required|string',
-            'monto' => 'required|numeric',
+        'nombre' => 'required|string',
+        'fechaini' => 'required|date',
+        'estado' => 'required|string',
+        'responsable' => 'required|string',
+        'monto' => 'required|numeric',
         ]);
 
-        //Simular actualización
-        return redirect("/actualizar/$id")->with('mensaje', 'Proyecto actualizado correctamente.');;
+        $proyecto = Proyecto::find($id);
+
+        if (!$proyecto) {
+        return view('error', ['mensaje' => "Proyecto con id $id no existe."]);
+        }
+
+        $proyecto->update($datosValidados);
+
+        return redirect("/listar")->with('mensaje', 'Proyecto actualizado correctamente.');
     }
+
 
     public function buscar()
     {
@@ -132,4 +136,5 @@ class ProyectoController extends Controller
         $id = $request->input('id');
         return redirect("/listar/$id");
     }
+
 }

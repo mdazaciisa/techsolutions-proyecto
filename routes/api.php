@@ -3,9 +3,8 @@
 use App\Http\Controllers\ProyectoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AutenticacionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
-//Route::put('/actualizar/id', [ProyectoController::class, 'actualizar']);
